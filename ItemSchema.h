@@ -15,17 +15,6 @@
 
 enum class WeaponId : short;
 
-enum class EconRarity : std::uint8_t {
-    Default = 0,
-    Gray,
-    LightBlue,
-    Blue,
-    Purple,
-    Pink,
-    Red,
-    Gold
-};
-
 struct PaintKit {
     int id;
     UtlString name;
@@ -38,7 +27,7 @@ struct PaintKit {
     bool baseDiffuseOverride;
     int rarity;
     PAD(40)
-        float wearRemapMin;
+    float wearRemapMin;
     float wearRemapMax;
 };
 
@@ -49,7 +38,7 @@ struct StickerKit {
     UtlString description;
     UtlString itemName;
     PAD(2 * sizeof(UtlString))
-        UtlString inventoryImage;
+    UtlString inventoryImage;
     int tournamentID;
     int tournamentTeamID;
     int tournamentPlayerID;
@@ -71,24 +60,24 @@ static_assert(sizeof(StaticAttrib) == WIN32_LINUX(12, 24));
 struct EconTool {
     INCONSTRUCTIBLE(EconTool)
 
-        PAD(sizeof(std::uintptr_t))
-        const char* typeName;
+    PAD(sizeof(std::uintptr_t))
+    const char* typeName;
 };
 
 class EconItemDefinition {
 public:
     INCONSTRUCTIBLE(EconItemDefinition)
 
-        VIRTUAL_METHOD(WeaponId, getWeaponId, 0, (), (this))
-        VIRTUAL_METHOD(const char*, getItemBaseName, 2, (), (this))
-        VIRTUAL_METHOD(const char*, getItemTypeName, 3, (), (this))
-        VIRTUAL_METHOD(const char*, getInventoryImage, 5, (), (this))
-        VIRTUAL_METHOD(const char*, getPlayerDisplayModel, 6, (), (this))
-        VIRTUAL_METHOD(const char*, getWorldDisplayModel, 7, (), (this))
-        VIRTUAL_METHOD(std::uint8_t, getRarity, 12, (), (this))
-        VIRTUAL_METHOD_V(int, getNumberOfSupportedStickerSlots, 44, (), (this))
+    VIRTUAL_METHOD(WeaponId, getWeaponId, 0, (), (this))
+    VIRTUAL_METHOD(const char*, getItemBaseName, 2, (), (this))
+    VIRTUAL_METHOD(const char*, getItemTypeName, 3, (), (this))
+    VIRTUAL_METHOD(const char*, getInventoryImage, 5, (), (this))
+    VIRTUAL_METHOD(const char*, getPlayerDisplayModel, 6, (), (this))
+    VIRTUAL_METHOD(const char*, getWorldDisplayModel, 7, (), (this))
+    VIRTUAL_METHOD(std::uint8_t, getRarity, 12, (), (this))
+    VIRTUAL_METHOD_V(int, getNumberOfSupportedStickerSlots, 44, (), (this))
 
-        std::uint8_t getQuality() noexcept
+    std::uint8_t getQuality() noexcept
     {
         return *reinterpret_cast<std::uint8_t*>(std::uintptr_t(this) + WIN32_LINUX(0x2B, 0x4B));
     }
@@ -169,7 +158,7 @@ public:
     int getLoadoutSlot(Team team) noexcept
     {
         if (team >= Team::None && team <= Team::CT)
-            return reinterpret_cast<int*>(std::uintptr_t(this) + WIN32_LINUX(0x28C, 0x3F4))[static_cast<int>(team)];
+            return reinterpret_cast<int*>(std::uintptr_t(this) + WIN32_LINUX(0x288, 0x3F4))[static_cast<int>(team)];
         return *reinterpret_cast<int*>(std::uintptr_t(this) + WIN32_LINUX(0x268, 0x3BC));
     }
 };
@@ -185,7 +174,7 @@ struct ItemListEntry {
     bool isUnusualList;
     PAD(2)
 
-        auto weaponId() const noexcept
+    auto weaponId() const noexcept
     {
         return static_cast<WeaponId>(itemDef);
     }
@@ -195,10 +184,10 @@ class EconLootListDefinition {
 public:
     INCONSTRUCTIBLE(EconLootListDefinition)
 
-        VIRTUAL_METHOD(const char*, getName, 0, (), (this))
-        VIRTUAL_METHOD(const UtlVector<ItemListEntry>&, getLootListContents, 1, (), (this))
+    VIRTUAL_METHOD(const char*, getName, 0, (), (this))
+    VIRTUAL_METHOD(const UtlVector<ItemListEntry>&, getLootListContents, 1, (), (this))
 
-        bool willProduceStatTrak() noexcept
+    bool willProduceStatTrak() noexcept
     {
         return *reinterpret_cast<bool*>(std::uintptr_t(this) + WIN32_LINUX(0x38, 0x58));
     }
@@ -208,10 +197,10 @@ class EconItemSetDefinition {
 public:
     INCONSTRUCTIBLE(EconItemSetDefinition)
 
-        VIRTUAL_METHOD(const char*, getLocKey, 1, (), (this))
-        VIRTUAL_METHOD(int, getItemCount, 4, (), (this))
-        VIRTUAL_METHOD(WeaponId, getItemDef, 5, (int index), (this, index))
-        VIRTUAL_METHOD(int, getItemPaintKit, 6, (int index), (this, index))
+    VIRTUAL_METHOD(const char*, getLocKey, 1, (), (this))
+    VIRTUAL_METHOD(int, getItemCount, 4, (), (this))
+    VIRTUAL_METHOD(WeaponId, getItemDef, 5, (int index), (this, index))
+    VIRTUAL_METHOD(int, getItemPaintKit, 6, (int index), (this, index))
 };
 
 struct EconItemQualityDefinition {
@@ -236,7 +225,7 @@ struct EconMusicDefinition {
     const char* name;
     const char* nameLocalized;
     PAD(2 * sizeof(const char*))
-        const char* inventoryImage;
+    const char* inventoryImage;
 };
 
 class EconItemAttributeDefinition;
@@ -245,31 +234,31 @@ class ItemSchema {
 public:
     INCONSTRUCTIBLE(ItemSchema)
 
-        PAD(WIN32_LINUX(0x88, 0xB8))
-        UtlMap<int, EconItemQualityDefinition> qualities;
+    PAD(WIN32_LINUX(0x88, 0xB8))
+    UtlMap<int, EconItemQualityDefinition> qualities;
     PAD(WIN32_LINUX(0x48, 0x60))
-        UtlMap<int, EconItemDefinition*> itemsSorted;
+    UtlMap<int, EconItemDefinition*> itemsSorted;
     PAD(WIN32_LINUX(0x60, 0x88))
-        UtlMap<int, const char*> revolvingLootLists;
+    UtlMap<int, const char*> revolvingLootLists;
     PAD(WIN32_LINUX(0x80, 0xB0))
-        UtlMap<std::uint64_t, AlternateIconData> alternateIcons;
+    UtlMap<std::uint64_t, AlternateIconData> alternateIcons;
     PAD(WIN32_LINUX(0x48, 0x60))
-        UtlMap<int, PaintKit*> paintKits;
+    UtlMap<int, PaintKit*> paintKits;
     UtlMap<int, StickerKit*> stickerKits;
     PAD(WIN32_LINUX(0x11C, 0x1A0))
-        UtlMap<int, EconMusicDefinition*> musicKits;
+    UtlMap<int, EconMusicDefinition*> musicKits;
 
     VIRTUAL_METHOD(EconItemDefinition*, getItemDefinitionInterface, 4, (int id), (this, id))
-        VIRTUAL_METHOD(const char*, getRarityName, 19, (uint8_t rarity), (this, rarity))
-        VIRTUAL_METHOD(EconItemAttributeDefinition*, getAttributeDefinitionInterface, 27, (int index), (this, index))
-        VIRTUAL_METHOD(int, getItemSetCount, 28, (), (this))
-        VIRTUAL_METHOD(EconItemSetDefinition*, getItemSet, 29, (int index), (this, index))
-        VIRTUAL_METHOD(EconLootListDefinition*, getLootList, 31, (const char* name, int* index = nullptr), (this, name, index))
-        VIRTUAL_METHOD(EconLootListDefinition*, getLootList, 32, (int index), (this, index))
-        VIRTUAL_METHOD(int, getLootListCount, 34, (), (this))
-        VIRTUAL_METHOD(EconItemDefinition*, getItemDefinitionByName, 42, (const char* name), (this, name))
+    VIRTUAL_METHOD(const char*, getRarityName, 19, (uint8_t rarity), (this, rarity))
+    VIRTUAL_METHOD(EconItemAttributeDefinition*, getAttributeDefinitionInterface, 27, (int index), (this, index))
+    VIRTUAL_METHOD(int, getItemSetCount, 28, (), (this))
+    VIRTUAL_METHOD(EconItemSetDefinition*, getItemSet, 29, (int index), (this, index))
+    VIRTUAL_METHOD(EconLootListDefinition*, getLootList, 31, (const char* name, int* index = nullptr), (this, name, index))
+    VIRTUAL_METHOD(EconLootListDefinition*, getLootList, 32, (int index), (this, index))
+    VIRTUAL_METHOD(int, getLootListCount, 34, (), (this))
+    VIRTUAL_METHOD(EconItemDefinition*, getItemDefinitionByName, 42, (const char* name), (this, name))
 
-        auto getItemDefinitionInterface(WeaponId id) noexcept
+    auto getItemDefinitionInterface(WeaponId id) noexcept
     {
         return getItemDefinitionInterface(static_cast<int>(id));
     }
@@ -279,7 +268,7 @@ class ItemSystem {
 public:
     INCONSTRUCTIBLE(ItemSystem)
 
-        VIRTUAL_METHOD(ItemSchema*, getItemSchema, 0, (), (this))
+    VIRTUAL_METHOD(ItemSchema*, getItemSchema, 0, (), (this))
 };
 
 enum TournamentTeam : std::uint8_t {
@@ -618,62 +607,19 @@ enum ProPlayer {
     Aerial = 2445180
 };
 
-class EconItemAttributeSetter {
-public:
-    explicit EconItemAttributeSetter(ItemSchema& itemSchema) : itemSchema{ itemSchema } {}
-
-    void setPaintKit(EconItem& econItem, float paintKit) noexcept { setAttributeValue(econItem, 6, &paintKit); }
-    void setSeed(EconItem& econItem, float seed) noexcept { setAttributeValue(econItem, 7, &seed); }
-    void setWear(EconItem& econItem, float wear) noexcept { setAttributeValue(econItem, 8, &wear); }
-    void setMusicID(EconItem& econItem, int musicID) noexcept { setAttributeValue(econItem, 166, &musicID); }
-    void setStatTrak(EconItem& econItem, int value) noexcept { setAttributeValue(econItem, 80, &value); }
-    void setStatTrakType(EconItem& econItem, int type) noexcept { setAttributeValue(econItem, 81, &type); }
-    void setTournamentID(EconItem& econItem, int id) noexcept { setAttributeValue(econItem, 137, &id); }
-    void setTournamentStage(EconItem& econItem, int stage) noexcept { setAttributeValue(econItem, 138, &stage); }
-    void setTournamentTeam1(EconItem& econItem, int team) noexcept { setAttributeValue(econItem, 139, &team); }
-    void setTournamentTeam2(EconItem& econItem, int team) noexcept { setAttributeValue(econItem, 140, &team); }
-    void setTournamentPlayer(EconItem& econItem, int player) noexcept { setAttributeValue(econItem, 223, &player); }
-    void setSpecialEventID(EconItem& econItem, int id) noexcept { setAttributeValue(econItem, 267, &id); }
-    void setIssueDate(EconItem& econItem, std::uint32_t date) noexcept { setAttributeValue(econItem, 222, &date); }
-    void setSpraysRemaining(EconItem& econItem, std::uint32_t n) noexcept { setAttributeValue(econItem, 232, &n); }
-    void setDropsAwarded(EconItem& econItem, std::uint32_t n) noexcept { setAttributeValue(econItem, 237, &n); }
-    void setDropsRedeemed(EconItem& econItem, std::uint32_t n) noexcept { setAttributeValue(econItem, 240, &n); }
-
-    void setStickerID(EconItem& econItem, int slot, int stickerID) noexcept
-    {
-        if (slot >= 0 && slot <= 5)
-            setAttributeValue(econItem, 113 + 4 * slot, &stickerID);
-    }
-
-    void setStickerWear(EconItem& econItem, int slot, float wear) noexcept
-    {
-        if (slot >= 0 && slot <= 5)
-            setAttributeValue(econItem, 114 + 4 * slot, &wear);
-    }
-
-private:
-    void setAttributeValue(EconItem& econItem, int index, void* value) noexcept
-    {
-        if (const auto attribute = itemSchema.getAttributeDefinitionInterface(index))
-            memory->setDynamicAttributeValue(&econItem, attribute, value);
-    }
-
-    ItemSchema& itemSchema;
-};
-
 class EconItem {
 public:
     INCONSTRUCTIBLE(EconItem)
 
 #ifdef _WIN32
-        VIRTUAL_METHOD(void, destructor, 0, (), (this, true))
+    VIRTUAL_METHOD(void, destructor, 0, (), (this, true))
 #else
-        VIRTUAL_METHOD(void, destructor, 1, (), (this))
+    VIRTUAL_METHOD(void, destructor, 1, (), (this))
 #endif
 
-        PAD(2 * sizeof(std::uintptr_t))
+    PAD(2 * sizeof(std::uintptr_t))
 
-        std::uint64_t itemID;
+    std::uint64_t itemID;
     std::uint64_t originalID;
     void* customDataOptimizedObject;
     std::uint32_t accountID;
@@ -689,13 +635,47 @@ public:
     std::int16_t itemSet;
     int soUpdateFrame;
     std::uint8_t flags;
+
+    void setAttributeValue(int index, void* value) noexcept
+    {
+        if (const auto attribute = memory->itemSystem()->getItemSchema()->getAttributeDefinitionInterface(index))
+            memory->setDynamicAttributeValue(this, attribute, value);
+    }
+
+    void setPaintKit(float paintKit) noexcept { setAttributeValue(6, &paintKit); }
+    void setSeed(float seed) noexcept { setAttributeValue(7, &seed); }
+    void setWear(float wear) noexcept { setAttributeValue(8, &wear); }
+    void setMusicID(int musicID) noexcept { setAttributeValue(166, &musicID); }
+    void setStatTrak(int value) noexcept { setAttributeValue(80, &value); }
+    void setStatTrakType(int type) noexcept { setAttributeValue(81, &type); }
+    void setTournamentID(int id) noexcept { setAttributeValue(137, &id); }
+    void setTournamentStage(int stage) noexcept { setAttributeValue(138, &stage); }
+    void setTournamentTeam1(int team) noexcept { setAttributeValue(139, &team); }
+    void setTournamentTeam2(int team) noexcept { setAttributeValue(140, &team); }
+    void setTournamentPlayer(int player) noexcept { setAttributeValue(223, &player); }
+    void setSpecialEventID(int id) noexcept { setAttributeValue(267, &id); }
+    void setIssueDate(std::uint32_t date) noexcept { setAttributeValue(222, &date); }
+    void setDropsAwarded(std::uint32_t n) noexcept { setAttributeValue(237, &n); }
+    void setDropsRedeemed(std::uint32_t n) noexcept { setAttributeValue(240, &n); }
+
+    void setStickerID(int slot, int stickerID) noexcept
+    {
+        if (slot >= 0 && slot <= 5)
+            setAttributeValue(113 + 4 * slot, &stickerID);
+    }
+
+    void setStickerWear(int slot, float wear) noexcept
+    {
+        if (slot >= 0 && slot <= 5)
+            setAttributeValue(114 + 4 * slot, &wear);
+    }
 };
 
 class SharedObject {
 public:
     INCONSTRUCTIBLE(SharedObject)
 
-        VIRTUAL_METHOD_V(int, getTypeID, 1, (), (this))
+    VIRTUAL_METHOD_V(int, getTypeID, 1, (), (this))
 };
 
 template <typename T>
@@ -703,15 +683,15 @@ class SharedObjectTypeCache {
 public:
     INCONSTRUCTIBLE(SharedObjectTypeCache)
 
-        VIRTUAL_METHOD_V(void, addObject, 1, (T* object), (this, object))
-        VIRTUAL_METHOD_V(void, removeObject, 3, (T* object), (this, object))
+    VIRTUAL_METHOD_V(void, addObject, 1, (T* object), (this, object))
+    VIRTUAL_METHOD_V(void, removeObject, 3, (T* object), (this, object))
 
-        PAD(sizeof(std::uintptr_t))
-        T** objects;
+    PAD(sizeof(std::uintptr_t))
+    T** objects;
     PAD(WIN32_LINUX(16, 24))
-        int objectCount;
+    int objectCount;
     PAD(WIN32_LINUX(4, 12))
-        int classID; // https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/shared/econ/econ_item_constants.h#L39
+    int classID; // https://github.com/perilouswithadollarsign/cstrike15_src/blob/f82112a2388b841d72cb62ca48ab1846dfcc11c8/game/shared/econ/econ_item_constants.h#L39
 };
 
 template <typename T>
@@ -719,8 +699,8 @@ class ClientSharedObjectCache {
 public:
     INCONSTRUCTIBLE(ClientSharedObjectCache)
 
-        PAD(16)
-        UtlVector<SharedObjectTypeCache<T>*> sharedObjectTypeCaches;
+    PAD(16)
+    UtlVector<SharedObjectTypeCache<T>*> sharedObjectTypeCaches;
 
     SharedObjectTypeCache<T>* findBaseTypeCache(int classID) noexcept
     {
@@ -740,15 +720,15 @@ class CSPlayerInventory {
 public:
     INCONSTRUCTIBLE(CSPlayerInventory)
 
-        VIRTUAL_METHOD(void, soCreated, 0, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
-        VIRTUAL_METHOD(void, soUpdated, 1, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
-        VIRTUAL_METHOD(void, soDestroyed, 2, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
-        VIRTUAL_METHOD_V(EconItemView*, getItemInLoadout, 8, (Team team, int slot), (this, team, slot))
-        VIRTUAL_METHOD_V(void, removeItem, 15, (std::uint64_t itemID), (this, itemID))
+    VIRTUAL_METHOD(void, soCreated, 0, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
+    VIRTUAL_METHOD(void, soUpdated, 1, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
+    VIRTUAL_METHOD(void, soDestroyed, 2, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
+    VIRTUAL_METHOD_V(EconItemView*, getItemInLoadout, 8, (Team team, int slot), (this, team, slot))
+    VIRTUAL_METHOD_V(void, removeItem, 15, (std::uint64_t itemID), (this, itemID))
 
-        auto getSOC() noexcept
+    auto getSOC() noexcept
     {
-        return *reinterpret_cast<ClientSharedObjectCache<EconItem>**>(std::uintptr_t(this) + WIN32_LINUX(0xB4, 0xF8));
+        return *reinterpret_cast<ClientSharedObjectCache<EconItem>**>(std::uintptr_t(this) + WIN32_LINUX(0x90, 0xC8));
     }
 
     SharedObjectTypeCache<EconItem>* getItemBaseTypeCache() noexcept
@@ -798,7 +778,6 @@ class InventoryManager {
 public:
     INCONSTRUCTIBLE(InventoryManager)
 
-        VIRTUAL_METHOD_V(bool, equipItemInSlot, 20, (Team team, int slot, std::uint64_t itemID, bool swap = false), (this, team, slot, itemID, swap))
-        VIRTUAL_METHOD_V(CSPlayerInventory*, getLocalInventory, 23, (), (this))
-        VIRTUAL_METHOD_V(void, updateInventoryEquippedState, 29, (CSPlayerInventory* inventory, std::uint64_t itemID, Team team, int slot, bool swap), (this, inventory, itemID, team, slot, swap))
+    VIRTUAL_METHOD_V(bool, equipItemInSlot, 20, (Team team, int slot, std::uint64_t itemID, bool swap = false), (this, team, slot, itemID, swap))
+    VIRTUAL_METHOD_V(CSPlayerInventory*, getLocalInventory, 23, (), (this))
 };
